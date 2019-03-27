@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<style>
+ canvas {
+      border: #333 10px solid;
+    }
+ 
+    body {
+      padding: 50px;
+    }
+  </style>
+<canvas id="myCanvas">
+</canvas>
+
+<script>
+	var canvas = document.querySelector("#myCanvas");
+
+	canvas.width  = window.innerWidth - 100;
+	canvas.height = window.innerHeight - 100;
+    
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle ="red"
+
+	var canvasPos = getPosition(canvas);
+	var mouseX = 0;
+	var mouseY = 0;
+	var color_val = 'red'
+	var pen_width = 1
+
+// clear with phone rotation
+window.onorientationchange = ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+// clear with space bar
+window.addEventListener('keydown', clear_desktop, false);
+function clear_desktop(e){
+	if (e.keyCode === 32){
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
+	update();
+}
+
+// change color of pen
+window.addEventListener("keydown", get_color, false);
+function get_color(e){
+
+	var color_key = e.key;
+	if (color_key == "b" ) { 
+		ctx.fillStyle = "blue";
+	}
+
+	if (color_key == "g" ) { 
+		ctx.fillStyle = "green";
+	}
+
+	if (color_key == "r" ) { 
+		ctx.fillStyle = "red";
+	}
+
+	if (color_key == "y" ) { 
+		ctx.fillStyle = "yellow";
+	}
+	update();
+}
+	
+// increase or decrease size of pen
+	window.addEventListener("keydown", penSize, false);
+  
+function penSize(e) {
+    switch(e.keyCode) {
+    	// up arrow pressed
+        case 38:
+        pen_width += 1
+        break;
+          // down arrow pressed
+        case 40:
+        if (pen_width >= 1){
+        	pen_width -= 1
+        	
+        }
+        break;
+    }  
+    return pen_width;
+     
+}       
+	canvas.addEventListener("mousemove", setMousePosition, false);
+
+
+	function setMousePosition(e) {
+		mouseX = e.clientX - canvasPos.x;
+		mouseY = e.clientY - canvasPos.y;
+	}  
+
+	function update(e) {
+		ctx.beginPath();
+		ctx.arc(mouseX, mouseY, pen_width, 0, 2 * Math.PI, true);
+		ctx.fill();
+  	requestAnimationFrame(update);
+  }
+  update();
+
+	function getPosition(el) {
+  		var xPosition = 0;
+  		var yPosition = 0;
+
+  		while (el) {
+  			xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+  			yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
+  			el = el.offsetParent;
+  		}
+
+  		return {
+  			x: xPosition,
+  			y: yPosition
+  		};
+  	}  
+
+</script>
+</body>
+</html>
