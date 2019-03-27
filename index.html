@@ -28,6 +28,10 @@
 	var color_val = 'red'
 	var pen_width = 1
 
+// move element with touch
+// window.addEventListener('touchstart', process_touchstart, false);
+window.addEventListener('touchmove', update, false);
+
 // clear with phone rotation
 window.onorientationchange = ctx.clearRect(0, 0, canvas.width, canvas.height);
 
