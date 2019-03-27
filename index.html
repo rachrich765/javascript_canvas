@@ -44,7 +44,7 @@
         // Update the touch co-ordinates
         getTouchPos();
 
-        ctx.arc(touchX, touchY, 5, 0, 2 * Math.PI, true);
+        
 
         // Prevents an additional mousedown event being triggered
         event.preventDefault();
@@ -52,7 +52,7 @@
 
     // Draw something and prevent the default scrolling when touch movement is detected
     function sketchpad_touchMove(e) { 
-        // Update the touch co-ordinates
+        // Update the touch coordinates
         getTouchPos(e);
 
         // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
