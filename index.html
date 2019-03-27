@@ -44,7 +44,7 @@
         // Update the touch co-ordinates
         getTouchPos();
 
-        drawDot(ctx,touchX,touchY,12);
+        ctx.arc(touchX, touchY, 5, 0, 2 * Math.PI, true);
 
         // Prevents an additional mousedown event being triggered
         event.preventDefault();
@@ -56,7 +56,7 @@
         getTouchPos(e);
 
         // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
-        ctx.arc(touchX, touchY, pen_width, 0, 2 * Math.PI, true);
+        ctx.arc(touchX, touchY, 5, 0, 2 * Math.PI, true);
 		ctx.fill();
 
         // Prevent a scrolling action as a result of this touchmove triggering.
