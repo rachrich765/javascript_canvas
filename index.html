@@ -4,39 +4,39 @@
 	<style>
  canvas {
       border: #333 10px solid;
-      width: 80%;
-      height: 80%;
-    }
- 
-    body {
-      padding: 50px;
     }
   </style>
-<canvas id="myCanvas">
-</canvas>
+<canvas id="myCanvas"></canvas>
+<!-- create color picker -->
+<input type="color" value="#E03232" id="cp">
+
 
 <script>
+	var canvasPos = getPosition(canvas);
+	var mouseX = 0;
+	var mouseY = 0;
+	var color_val = "red";
+	var pen_width = 1;
+	var touchX,touchY;
 	var canvas = document.querySelector("#myCanvas");
+	var ctx = canvas.getContext("2d");
 
+	c = document.querySelector("#cp");
+	console.log(c);
+	// color_val = c;
+
+
+	
 	// adjust canvas size to size of screen
     window.addEventListener('resize', resizeCanvas, false);
     // adjust canvas size when the orientation of the mobile device is changed
     window.addEventListener('orientationchange', resizeCanvas, false);
     resizeCanvas(); 
       function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth*0.80;
+        canvas.height = window.innerHeight*0.80;
       }
-    
-    var ctx = canvas.getContext("2d");
-    ctx.fillStyle ="red"
 
-	var canvasPos = getPosition(canvas);
-	var mouseX = 0;
-	var mouseY = 0;
-	var color_val = 'red'
-	var pen_width = 1
-	var touchX,touchY;
 	canvas.addEventListener('touchstart', sketchpad_touchStart, false);
     canvas.addEventListener('touchmove', sketchpad_touchMove, false);
 		 // Draw something when a touch start is detected
@@ -44,8 +44,8 @@
         // Update the touch co-ordinates
         getTouchPos();
 
-        
-
+        ctx.arc(touchX, touchY, 5, 0, 2 * Math.PI, true);
+        ctx.fillStyle = color_val
         // Prevents an additional mousedown event being triggered
         event.preventDefault();
     }
@@ -81,8 +81,6 @@
     }
 
 
-
-
 // clear with phone rotation
 canvas.onorientationchange = ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -96,28 +94,36 @@ function clear_desktop(e){
 }
 
 // change color of pen
+// with color picker
+document.querySelector("#cp").addEventListener("change", get_color2);
+// with keys
 window.addEventListener("keydown", get_color, false);
 function get_color(e){
-
 	var color_key = e.key;
 	if (color_key == "b" ) { 
-		ctx.fillStyle = "blue";
+		color_val = "blue";
 	}
 
 	if (color_key == "g" ) { 
-		ctx.fillStyle = "green";
+		color_val = "green";
 	}
 
 	if (color_key == "r" ) { 
-		ctx.fillStyle = "red";
+		color_val = "red";
 	}
 
 	if (color_key == "y" ) { 
-		ctx.fillStyle = "yellow";
+		color_val = "yellow";
 	}
+	return color_val;
 	update();
 }
-	
+function get_color2(e){
+	color_val = c.value;
+	return color_val;
+	update();
+
+}
 // increase or decrease size of pen
 	window.addEventListener("keydown", penSize, false);
   
@@ -149,6 +155,7 @@ function penSize(e) {
 	function update(e) {
 		ctx.beginPath();
 		ctx.arc(mouseX, mouseY, pen_width, 0, 2 * Math.PI, true);
+		ctx.fillStyle = color_val
 		ctx.fill();
   	requestAnimationFrame(update);
   }
@@ -157,7 +164,7 @@ function penSize(e) {
 	function getPosition(el) {
   		var xPosition = 0;
   		var yPosition = 0;
-
+// can you pageX and pageY
   		while (el) {
   			xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
   			yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
