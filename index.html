@@ -62,6 +62,7 @@
     }
 
     function getTouchPos(e) {
+    	var touches = e.touches;
     	var touch = e.touches[0]; 
     	touchX=touch.pageX-touch.target.offsetLeft;
     	touchY=touch.pageY-touch.target.offsetTop;
