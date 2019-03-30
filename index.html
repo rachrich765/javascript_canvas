@@ -23,7 +23,6 @@
 
 	c = document.querySelector("#cp");
 	console.log(c);
-	// color_val = c;
 
 
 	
@@ -45,7 +44,6 @@
         getTouchPos();
 
         ctx.arc(touchX, touchY, 5, 0, 2 * Math.PI, true);
-        ctx.fillStyle = color_val
         // Prevents an additional mousedown event being triggered
         event.preventDefault();
     }
@@ -63,39 +61,38 @@
         event.preventDefault();
     }
 
-    // Get the touch position relative to the top-left of the canvas
-    // When we get the raw values of pageX and pageY below, they take into account the scrolling on the page
-    // but not the position relative to our target div. We'll adjust them using "target.offsetLeft" and
-    // "target.offsetTop" to get the correct values in relation to the top left of the canvas.
     function getTouchPos(e) {
-        if (!e)
-            var e = event;
-
-        if(e.touches) {
-            if (e.touches.length == 1) { // Only deal with one finger
-                var touch = e.touches[0]; // Get the information for finger #1
-                touchX=touch.pageX-touch.target.offsetLeft;
-                touchY=touch.pageY-touch.target.offsetTop;
-            }
-        }
+    	var touch = e.touches; 
+    	touchX=touch.pageX-touch.target.offsetLeft;
+    	touchY=touch.pageY-touch.target.offsetTop;
     }
 
 
 // clear with phone rotation
-canvas.onorientationchange = ctx.clearRect(0, 0, canvas.width, canvas.height);
+window.addEventListener('orientationchange', clear_mobile, false);
+function clear_mobile(e){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	// set color back to red
+	color_val = "red";
+}
 
 // clear with space bar
 window.addEventListener('keydown', clear_desktop, false);
 function clear_desktop(e){
 	if (e.keyCode === 32){
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0,0, canvas.width, canvas.height); 
+		// set color back to red
+		color_val = "red";
 	}
-	update();
 }
 
 // change color of pen
 // with color picker
-document.querySelector("#cp").addEventListener("change", get_color2);
+c.addEventListener("change", get_color2, false);
+function get_color2(e){
+	color_val = c.value;
+	return color_val;
+}
 // with keys
 window.addEventListener("keydown", get_color, false);
 function get_color(e){
@@ -115,51 +112,40 @@ function get_color(e){
 	if (color_key == "y" ) { 
 		color_val = "yellow";
 	}
-	return color_val;
-	update();
+	return color_val;	
 }
-function get_color2(e){
-	color_val = c.value;
-	return color_val;
-	update();
 
-}
 // increase or decrease size of pen
-	window.addEventListener("keydown", penSize, false);
-  
+window.addEventListener("keydown", penSize, false);
+
 function penSize(e) {
-    switch(e.keyCode) {
-    	// up arrow pressed
-        case 38:
-        pen_width += 1
-        break;
-          // down arrow pressed
-        case 40:
-        if (pen_width >= 1){
-        	pen_width -= 1
-        	
-        }
-        break;
-    }  
+	// up arrow pressed
+	if (e.keyCode == 38){
+		pen_width += 1;
+	}
+	// down arrow pressed
+    if (e.keyCode ==40) {
+    	 if (pen_width >= 1){
+    	 	pen_width -= 1;
+    	 }   
+    	}  
     return pen_width;
-     
-}       
-	canvas.addEventListener("mousemove", setMousePosition, false);
+}
 
+canvas.addEventListener("mousemove", setMousePosition, false);
 
-	function setMousePosition(e) {
-		mouseX = e.clientX - canvasPos.x;
-		mouseY = e.clientY - canvasPos.y;
-	}  
+function setMousePosition(e) {
+	mouseX = e.clientX - canvasPos.x;
+	mouseY = e.clientY - canvasPos.y;
+}
 
-	function update(e) {
-		ctx.beginPath();
-		ctx.arc(mouseX, mouseY, pen_width, 0, 2 * Math.PI, true);
-		ctx.fillStyle = color_val
-		ctx.fill();
-  	requestAnimationFrame(update);
+function update(e) {
+	ctx.beginPath();
+	ctx.arc(mouseX, mouseY, pen_width, 0, 2 * Math.PI, true);
+	ctx.fillStyle = color_val;
+	ctx.fill();
+	requestAnimationFrame(update);
   }
-  update();
 
 	function getPosition(el) {
   		var xPosition = 0;
@@ -176,7 +162,7 @@ function penSize(e) {
   			y: yPosition
   		};
   	}  
-
+update();
 </script>
 </body>
 </html>
